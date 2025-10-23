@@ -9,16 +9,23 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  return MaterialApp(
-    title: 'Sandwich Shop App',
-    home: Scaffold(
-      appBar: AppBar(title: const Text('Sandwich Counter')),
-      body: const Center(
-        child: OrderItemDisplay(5, 'Footlong'),
+    return MaterialApp(
+      title: 'Sandwich Shop App',
+      home: Scaffold(
+        appBar: AppBar(title: const Text('Sandwich Counter')),
+        body: Center(
+          child: Container(
+            width: 200,
+            height: 200,
+            alignment: Alignment.center,
+            padding: const EdgeInsets.all(8),
+            color: Colors.blue,
+            child: const OrderItemDisplay(5, 'Footlong'), // fixed: single comma and closed Container/Center/Scaffold/MaterialApp properly
+          ),
+        ),
       ),
-    ),
-  );
-}
+    );
+  }
 }
 
 class OrderItemDisplay extends StatelessWidget {
