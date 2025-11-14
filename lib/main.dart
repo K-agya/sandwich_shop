@@ -19,7 +19,7 @@ class App extends StatelessWidget {
 class StyledButton extends StatelessWidget {
   final String label;
   final IconData icon;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed; // changed to nullable
   final Color backgroundColor;
 
   const StyledButton({
@@ -32,13 +32,14 @@ class StyledButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final enabled = onPressed != null;
     return ElevatedButton.icon(
-      onPressed: onPressed,
+      onPressed: onPressed, // pass null to disable
       icon: Icon(icon),
       label: Text(label),
       style: ElevatedButton.styleFrom(
-        backgroundColor: backgroundColor,
-        foregroundColor: Colors.white,
+        backgroundColor: enabled ? backgroundColor : Colors.grey,
+        foregroundColor: enabled ? Colors.white : Colors.white70,
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
@@ -87,16 +88,16 @@ class _OrderScreenState extends State<OrderScreen> {
                 StyledButton(
                   label: 'Add',
                   icon: Icons.add,
-                  onPressed: _increaseQuantity,
+                  onPressed: _quantity < widget.maxQuantity ? _increaseQuantity : null, // disabled when at max
                   backgroundColor: Colors.green,
                 ),
                 const SizedBox(width: 16),
-                  StyledButton(
-                    label: 'Remove',
-                    icon: Icons.remove,
-                    onPressed: _decreaseQuantity,
-                    backgroundColor: Colors.red,
-                  ),
+                StyledButton(
+                  label: 'Remove',
+                  icon: Icons.remove,
+                  onPressed: _quantity > 0 ? _decreaseQuantity : null, // disabled when zero
+                  backgroundColor: Colors.red,
+                ),
               ],
             ),
           ],
