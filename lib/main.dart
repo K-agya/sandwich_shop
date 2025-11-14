@@ -16,6 +16,36 @@ class App extends StatelessWidget {
   }
 }
 
+class StyledButton extends StatelessWidget {
+  final String label;
+  final IconData icon;
+  final VoidCallback onPressed;
+  final Color backgroundColor;
+
+  const StyledButton({
+    required this.label,
+    required this.icon,
+    required this.onPressed,
+    this.backgroundColor = Colors.brown,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: onPressed,
+      icon: Icon(icon),
+      label: Text(label),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: backgroundColor,
+        foregroundColor: Colors.white,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+}
+
 class OrderScreen extends StatefulWidget {
   final int maxQuantity;
 
@@ -54,14 +84,19 @@ class _OrderScreenState extends State<OrderScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                ElevatedButton(
+                StyledButton(
+                  label: 'Add',
+                  icon: Icons.add,
                   onPressed: _increaseQuantity,
-                  child: const Text('Add'),
+                  backgroundColor: Colors.green,
                 ),
-                ElevatedButton(
-                  onPressed: _decreaseQuantity,
-                  child: const Text('Remove'),
-                ),
+                const SizedBox(width: 16),
+                  StyledButton(
+                    label: 'Remove',
+                    icon: Icons.remove,
+                    onPressed: _decreaseQuantity,
+                    backgroundColor: Colors.red,
+                  ),
               ],
             ),
           ],
