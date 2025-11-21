@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'views/app_styles.dart';
 
 void main() {
   runApp(const App());
@@ -58,8 +59,10 @@ class OrderScreen extends StatefulWidget {
   }
 }
 
+// ...existing code...
 class _OrderScreenState extends State<OrderScreen> {
   int _quantity = 0;
+  String _selectedSize = 'Footlong'; // changed code
 
   void _increaseQuantity() {
     if (_quantity < widget.maxQuantity) {
@@ -76,26 +79,46 @@ class _OrderScreenState extends State<OrderScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Sandwich Counter')),
+      appBar: AppBar(title: const Text(
+        'Sandwich Counter',
+        style: heading1
+        )
+        ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            OrderItemDisplay(_quantity, 'Footlong'),
+            // changed code: dropdown to pick sandwich size
+            DropdownButton<String>(
+              value: _selectedSize,
+              items: const [
+                DropdownMenuItem(value: 'Footlong', child: Text('Footlong')),
+                DropdownMenuItem(value: '6-inch', child: Text('6-inch')),
+              ],
+              onChanged: (value) => setState(() {
+                if (value != null) _selectedSize = value;
+              }),
+            ),
+
+            // changed code: use selectedSize
+            OrderItemDisplay(_quantity, _selectedSize),
+
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 StyledButton(
                   label: 'Add',
                   icon: Icons.add,
-                  onPressed: _quantity < widget.maxQuantity ? _increaseQuantity : null, // disabled when at max
+                  onPressed: _quantity < widget.maxQuantity
+                      ? _increaseQuantity
+                      : null,
                   backgroundColor: Colors.green,
                 ),
                 const SizedBox(width: 16),
                 StyledButton(
                   label: 'Remove',
                   icon: Icons.remove,
-                  onPressed: _quantity > 0 ? _decreaseQuantity : null, // disabled when zero
+                  onPressed: _quantity > 0 ? _decreaseQuantity : null,
                   backgroundColor: Colors.red,
                 ),
               ],
@@ -106,15 +129,22 @@ class _OrderScreenState extends State<OrderScreen> {
     );
   }
 }
+// ...existing code...
 
 class OrderItemDisplay extends StatelessWidget {
-  final String itemType;
   final int quantity;
+  final String itemType;
 
   const OrderItemDisplay(this.quantity, this.itemType, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Text('$quantity $itemType sandwich(es): ${'🥪' * quantity}');
+    final sandwiches = List.generate(quantity, (_) => '🥪').join(); // changed code
+    return Text(
+      '$quantity $itemType sandwich(es): $sandwiches',
+      textAlign: TextAlign.center,
+      overflow: TextOverflow.ellipsis,
+      maxLines: 2,
+    );
   }
 }
